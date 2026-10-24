@@ -1,0 +1,366 @@
+@config '../../tailwind.config.js';
+
+@import 'tailwindcss';
+
+@import 'tw-animate-css';
+@import './design-system.css';
+
+@source '../views';
+@source '../../vendor/laravel/framework/src/Illuminate/Pagination/resources/views/*.blade.php';
+
+@custom-variant dark (&:is(.dark *));
+
+@keyframes flash-sale-marquee {
+    from {
+        transform: translateX(0);
+    }
+
+    to {
+        transform: translateX(-50%);
+    }
+}
+
+@keyframes new-arrivals-marquee {
+    from {
+        transform: translateX(0);
+    }
+
+    to {
+        transform: translateX(-50%);
+    }
+}
+
+.flash-sale-track,
+.new-arrivals-track,
+.category-marquee-track {
+    animation-duration: 48s;
+    animation-timing-function: linear;
+    animation-iteration-count: infinite;
+}
+
+.flash-sale-track {
+    animation-name: flash-sale-marquee;
+}
+
+.new-arrivals-track {
+    animation-name: new-arrivals-marquee;
+    animation-duration: 40s;
+}
+
+.category-marquee-track {
+    animation-name: flash-sale-marquee;
+    animation-duration: 72s;
+}
+
+.home-animations-ready [data-home-reveal] {
+    opacity: 0;
+    transform: translateY(24px);
+    transition:
+        opacity 650ms cubic-bezier(0.2, 0.65, 0.3, 1),
+        transform 650ms cubic-bezier(0.2, 0.65, 0.3, 1);
+}
+
+.home-animations-ready [data-home-reveal].home-revealed {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+.home-reveal-card {
+    transition:
+        opacity 650ms cubic-bezier(0.2, 0.65, 0.3, 1),
+        transform 650ms cubic-bezier(0.2, 0.65, 0.3, 1),
+        box-shadow 300ms ease;
+}
+
+.hero-carousel-scene {
+    perspective: 1200px;
+    perspective-origin: 50% 45%;
+    transform-style: preserve-3d;
+}
+
+.hero-carousel-card {
+    transform-style: preserve-3d;
+    backface-visibility: hidden;
+    transition:
+        transform 750ms cubic-bezier(0.2, 0.72, 0.25, 1),
+        opacity 750ms ease,
+        box-shadow 750ms ease;
+}
+
+.hero-carousel-card[data-active='true'] {
+    box-shadow: 0 32px 70px rgb(0 0 0 / 38%);
+}
+
+@keyframes hero-carousel-content-in {
+    from {
+        opacity: 0;
+        transform: translateY(18px) scale(0.98);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+    }
+}
+
+.hero-carousel-card[data-active='true'] .hero-carousel-content {
+    animation: hero-carousel-content-in 550ms cubic-bezier(0.2, 0.72, 0.25, 1)
+        both;
+}
+
+.hero-carousel-product-info {
+    max-width: calc(100% - 4.5rem);
+}
+
+@keyframes hero-carousel-product-info-in {
+    from {
+        opacity: 0;
+        transform: translate(72%, -145%) scale(0.94);
+    }
+
+    to {
+        opacity: 1;
+        transform: translate(0, 0) scale(1);
+    }
+}
+
+.hero-carousel-card[data-active='true'] .hero-carousel-product-info {
+    animation: hero-carousel-product-info-in 850ms
+        cubic-bezier(0.18, 0.72, 0.25, 1) both;
+}
+
+.hero-carousel-card[data-active='true'] .hero-carousel-product-info h2 {
+    animation: hero-carousel-content-in 550ms 160ms
+        cubic-bezier(0.2, 0.72, 0.25, 1) both;
+}
+
+.hero-carousel-card[data-active='true'] .hero-carousel-product-info > p {
+    animation: hero-carousel-content-in 550ms 260ms
+        cubic-bezier(0.2, 0.72, 0.25, 1) both;
+}
+
+@keyframes home-slide-in-left {
+    from {
+        opacity: 0;
+        transform: translateX(-28px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
+.home-revealed .home-hero-copy > * {
+    animation: home-slide-in-left 700ms cubic-bezier(0.2, 0.65, 0.3, 1) both;
+}
+
+.home-revealed .home-hero-copy > :nth-child(2) {
+    animation-delay: 100ms;
+}
+
+.home-revealed .home-hero-copy > :nth-child(3) {
+    animation-delay: 200ms;
+}
+
+.home-revealed .home-hero-copy > :nth-child(4) {
+    animation-delay: 300ms;
+}
+
+#home-page button:not(:disabled),
+#home-page .home-button {
+    transition:
+        transform 180ms ease,
+        box-shadow 180ms ease,
+        filter 180ms ease;
+}
+
+#home-page button:not(:disabled):hover,
+#home-page .home-button:hover {
+    transform: translateY(-2px) scale(1.02);
+    filter: brightness(1.06);
+    box-shadow: 0 8px 20px rgb(0 0 0 / 14%);
+}
+
+#home-page button:not(:disabled):active,
+#home-page .home-button:active {
+    transform: translateY(0) scale(0.98);
+}
+
+.flash-sale-track:hover,
+.new-arrivals-track:hover,
+.category-marquee-track:hover {
+    animation-play-state: paused;
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .flash-sale-track,
+    .new-arrivals-track,
+    .category-marquee-track {
+        animation: none;
+    }
+
+    .home-animations-ready [data-home-reveal],
+    .home-reveal-card {
+        opacity: 1;
+        transform: none;
+        transition: none;
+    }
+
+    .home-revealed .home-hero-copy > * {
+        animation: none;
+    }
+
+    .hero-carousel-card,
+    .hero-carousel-card[data-active='true'] .hero-carousel-content,
+    .hero-carousel-card[data-active='true'] .hero-carousel-product-info * {
+        animation: none;
+        transition: none;
+    }
+
+    #home-page button:not(:disabled),
+    #home-page .home-button {
+        transition: none;
+    }
+}
+
+@theme {
+    --font-sans:
+        'Instrument Sans', ui-sans-serif, system-ui, sans-serif,
+        'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol',
+        'Noto Color Emoji';
+
+    --radius-lg: var(--radius);
+    --radius-md: calc(var(--radius) - 2px);
+    --radius-sm: calc(var(--radius) - 4px);
+    --radius-control: var(--ds-radius-control);
+    --radius-card: var(--ds-radius-card);
+    --radius-dialog: var(--ds-radius-dialog);
+    --radius-pill: var(--ds-radius-pill);
+    --shadow-card: var(--ds-shadow-card);
+    --shadow-popover: var(--ds-shadow-popover);
+
+    --color-background: var(--background);
+    --color-foreground: var(--foreground);
+
+    --color-card: var(--card);
+    --color-card-foreground: var(--card-foreground);
+
+    --color-popover: var(--popover);
+    --color-popover-foreground: var(--popover-foreground);
+
+    --color-primary: var(--primary);
+    --color-primary-foreground: var(--primary-foreground);
+
+    --color-secondary: var(--secondary);
+    --color-secondary-foreground: var(--secondary-foreground);
+
+    --color-muted: var(--muted);
+    --color-muted-foreground: var(--muted-foreground);
+
+    --color-accent: var(--accent);
+    --color-accent-foreground: var(--accent-foreground);
+
+    --color-destructive: var(--destructive);
+    --color-destructive-foreground: var(--destructive-foreground);
+
+    --color-border: var(--border);
+    --color-input: var(--input);
+    --color-ring: var(--ring);
+
+    --color-chart-1: var(--chart-1);
+    --color-chart-2: var(--chart-2);
+    --color-chart-3: var(--chart-3);
+    --color-chart-4: var(--chart-4);
+    --color-chart-5: var(--chart-5);
+
+    --color-sidebar: var(--sidebar);
+    --color-sidebar-foreground: var(--sidebar-foreground);
+    --color-sidebar-primary: var(--sidebar-primary);
+    --color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
+    --color-sidebar-accent: var(--sidebar-accent);
+    --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
+    --color-sidebar-border: var(--sidebar-border);
+    --color-sidebar-ring: var(--sidebar-ring);
+}
+
+:root {
+    --background: oklch(1 0 0);
+    --foreground: oklch(0.145 0 0);
+    --card: oklch(1 0 0);
+    --card-foreground: oklch(0.145 0 0);
+    --popover: oklch(1 0 0);
+    --popover-foreground: oklch(0.145 0 0);
+    --primary: oklch(0.205 0 0);
+    --primary-foreground: oklch(0.985 0 0);
+    --secondary: oklch(0.97 0 0);
+    --secondary-foreground: oklch(0.205 0 0);
+    --muted: oklch(0.97 0 0);
+    --muted-foreground: oklch(0.556 0 0);
+    --accent: oklch(0.97 0 0);
+    --accent-foreground: oklch(0.205 0 0);
+    --destructive: oklch(0.577 0.245 27.325);
+    --destructive-foreground: oklch(0.577 0.245 27.325);
+    --border: oklch(0.922 0 0);
+    --input: oklch(0.922 0 0);
+    --ring: oklch(0.87 0 0);
+    --chart-1: oklch(0.646 0.222 41.116);
+    --chart-2: oklch(0.6 0.118 184.704);
+    --chart-3: oklch(0.398 0.07 227.392);
+    --chart-4: oklch(0.828 0.189 84.429);
+    --chart-5: oklch(0.769 0.188 70.08);
+    --radius: 0.625rem;
+    --sidebar: oklch(0.985 0 0);
+    --sidebar-foreground: oklch(0.145 0 0);
+    --sidebar-primary: oklch(0.205 0 0);
+    --sidebar-primary-foreground: oklch(0.985 0 0);
+    --sidebar-accent: oklch(0.97 0 0);
+    --sidebar-accent-foreground: oklch(0.205 0 0);
+    --sidebar-border: oklch(0.922 0 0);
+    --sidebar-ring: oklch(0.87 0 0);
+}
+
+.dark {
+    --background: oklch(0.145 0 0);
+    --foreground: oklch(0.985 0 0);
+    --card: oklch(0.145 0 0);
+    --card-foreground: oklch(0.985 0 0);
+    --popover: oklch(0.145 0 0);
+    --popover-foreground: oklch(0.985 0 0);
+    --primary: oklch(0.985 0 0);
+    --primary-foreground: oklch(0.205 0 0);
+    --secondary: oklch(0.269 0 0);
+    --secondary-foreground: oklch(0.985 0 0);
+    --muted: oklch(0.269 0 0);
+    --muted-foreground: oklch(0.708 0 0);
+    --accent: oklch(0.269 0 0);
+    --accent-foreground: oklch(0.985 0 0);
+    --destructive: oklch(0.396 0.141 25.723);
+    --destructive-foreground: oklch(0.637 0.237 25.331);
+    --border: oklch(0.269 0 0);
+    --input: oklch(0.269 0 0);
+    --ring: oklch(0.439 0 0);
+    --chart-1: oklch(0.488 0.243 264.376);
+    --chart-2: oklch(0.696 0.17 162.48);
+    --chart-3: oklch(0.769 0.188 70.08);
+    --chart-4: oklch(0.627 0.265 303.9);
+    --chart-5: oklch(0.645 0.246 16.439);
+    --sidebar: oklch(0.205 0 0);
+    --sidebar-foreground: oklch(0.985 0 0);
+    --sidebar-primary: oklch(0.985 0 0);
+    --sidebar-primary-foreground: oklch(0.985 0 0);
+    --sidebar-accent: oklch(0.269 0 0);
+    --sidebar-accent-foreground: oklch(0.985 0 0);
+    --sidebar-border: oklch(0.269 0 0);
+    --sidebar-ring: oklch(0.439 0 0);
+}
+
+@layer base {
+    * {
+        @apply border-border;
+    }
+
+    body {
+        @apply bg-background text-foreground;
+    }
+}
