@@ -13,7 +13,7 @@ return [
     |
     */
 
-    'name' => env('APP_NAME', 'Laravel'),
+    'name' => env('APP_NAME', 'sheradam.shop | Best Price in Bangladesh - Online Shopping in Bangladesh'),
 
     /*
     |--------------------------------------------------------------------------

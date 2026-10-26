@@ -12,6 +12,7 @@ use App\Http\Controllers\LegalPageController;
 use App\Http\Controllers\SellerOnboardingController;
 use App\Http\Controllers\ShopController;
 use App\Http\Controllers\StoreController;
+use App\Http\Controllers\StorefrontSeoController;
 use App\Http\Controllers\SuperAdmin\AboutPageController;
 use App\Http\Controllers\SuperAdmin\ActivityLogController;
 use App\Http\Controllers\SuperAdmin\ContactPageController;
@@ -39,6 +40,8 @@ use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 
 Route::get('/', HomeController::class)->name('home');
+Route::get('/robots.txt', [StorefrontSeoController::class, 'robots'])->name('robots');
+Route::get('/sitemap.xml', [StorefrontSeoController::class, 'sitemap'])->name('sitemap');
 Route::get('/about', AboutController::class)->name('about');
 Route::get('/contact', ContactController::class)->name('contact');
 Route::get('/terms-of-use', LegalPageController::class)->defaults('slug', 'terms-of-use')->name('legal.terms');

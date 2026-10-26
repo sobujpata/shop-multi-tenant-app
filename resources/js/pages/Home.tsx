@@ -202,7 +202,7 @@ export default function Home({
 
     return (
         <>
-            <Head title="Discover something different" />
+            <Head title="sheradam.shop | online shopping in bangladesh" />
             <div
                 id="home-page"
                 ref={homeRef}

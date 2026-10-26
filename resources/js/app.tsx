@@ -9,10 +9,10 @@ import CustomerAccountLayout from '@/layouts/customer-account-layout';
 import SettingsLayout from '@/layouts/settings/layout';
 import StorefrontLayout from '@/layouts/storefront-layout';
 
-const appName = import.meta.env.VITE_APP_NAME || 'Laravel';
+const appName = import.meta.env.VITE_APP_NAME || 'sheradam.shop | Best Price in Bangladesh - Online Shopping in Bangladesh';
 
 void createInertiaApp({
-    title: (title) => (title ? `${title} - ${appName}` : appName),
+    title: (title) => title || appName,
     layout: (name) => {
         switch (true) {
             case name === 'welcome':

@@ -82,6 +82,44 @@ test('home and public product listings render available catalog products', funct
             ->has('options.categories', 1));
 });
 
+test('robots and sitemap endpoints expose only public storefront URLs', function () {
+    $tenant = storefrontTenant();
+    $inactiveTenant = storefrontTenant('pending');
+    $category = Category::create([
+        'name' => 'SEO Category',
+        'slug' => 'seo-category',
+    ]);
+    $product = storefrontProduct($tenant, $category);
+    $inactiveProduct = storefrontProduct($tenant, $category, attributes: [
+        'name' => 'Inactive SEO Product',
+        'slug' => 'inactive-seo-product',
+        'is_active' => false,
+    ]);
+    $unpublishedTenantProduct = storefrontProduct($inactiveTenant, $category, attributes: [
+        'name' => 'Unpublished Tenant Product',
+        'slug' => 'unpublished-tenant-product',
+    ]);
+
+    $this->get('/robots.txt')
+        ->assertOk()
+        ->assertHeader('Content-Type', 'text/plain; charset=UTF-8')
+        ->assertSee("User-agent: *\nAllow: /\n\nSitemap: https://sheradam.shop/sitemap.xml");
+
+    $this->get('/sitemap.xml')
+        ->assertOk()
+        ->assertHeader('Content-Type', 'application/xml; charset=UTF-8')
+        ->assertSee(route('home'), false)
+        ->assertSee(route('stores.show', $tenant->slug), false)
+        ->assertSee(route('shop.show', $product->slug), false)
+        ->assertSee(route('shop.index', ['category' => $category->slug]), false)
+        ->assertDontSee(route('cart.index'), false)
+        ->assertDontSee(route('customer.checkout'), false)
+        ->assertDontSee('?category='.$category->slug.'&', false)
+        ->assertDontSee(route('stores.show', $inactiveTenant->slug), false)
+        ->assertDontSee(route('shop.show', $inactiveProduct->slug), false)
+        ->assertDontSee(route('shop.show', $unpublishedTenantProduct->slug), false);
+});
+
 test('store directory lists active sellers including stores without products and supports search', function () {
     $activeTenant = storefrontTenant();
     $matchingTenant = storefrontTenant();
