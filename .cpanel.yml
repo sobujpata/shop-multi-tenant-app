@@ -1,0 +1,5 @@
+deployment:
+  tasks:
+    - export DEPLOYPATH=/home/sheradam/public_html/shop-multi-tenant-app
+    - /bin/mkdir -p "$DEPLOYPATH"
+    - /bin/cp -R public/. "$DEPLOYPATH"/
