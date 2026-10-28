@@ -1,15 +1,17 @@
 import { Link, router, usePage } from '@inertiajs/react';
 import {
-    CircleHelp,
     ArrowRight,
     Banknote,
+    Bell,
     ChevronRight,
     Heart,
     House,
     LogIn,
     LogOut,
+    MapPin,
     Menu,
     Moon,
+    PackageCheck,
     Search,
     Shapes,
     ShoppingBag,
@@ -63,6 +65,17 @@ const categoryUrl = (slug: string) =>
     `/shop?category=${encodeURIComponent(slug)}`;
 
 const countLabel = (count: number) => (count > 99 ? '99+' : count);
+
+const currencySymbols: Record<string, string> = {
+    AED: 'د.إ',
+    BDT: '৳',
+    EUR: '€',
+    GBP: '£',
+    INR: '₹',
+    JPY: '¥',
+    PKR: '₨',
+    USD: '$',
+};
 
 function Brand({ className = '' }: { className?: string }) {
     const { props } = usePage<PageProps>();
@@ -542,7 +555,7 @@ function DesktopNavigation({ categories }: { categories: Category[] }) {
     );
 }
 
-function ThemeToggle() {
+function ThemeToggle({ className = '' }: { className?: string }) {
     const { resolvedAppearance, updateAppearance } = useAppearance();
     const nextAppearance = resolvedAppearance === 'dark' ? 'light' : 'dark';
     const Icon = resolvedAppearance === 'dark' ? Sun : Moon;
@@ -552,7 +565,7 @@ function ThemeToggle() {
             type="button"
             onClick={() => updateAppearance(nextAppearance)}
             aria-label={`Switch to ${nextAppearance} mode`}
-            className="grid size-10 place-items-center rounded-full transition hover:bg-muted"
+            className={`grid size-10 place-items-center rounded-full transition hover:bg-muted ${className}`}
         >
             <Icon className="size-[18px]" aria-hidden="true" />
         </button>
@@ -638,17 +651,126 @@ export default function Navbar() {
         props.options?.categories ??
         [];
     const customer = props.auth.customer;
+    const currency = props.storefrontSettings?.currency ?? 'BDT';
+    const currencySymbol = currencySymbols[currency] ?? currency;
+    const ordersUrl = customer ? '/customer/account/orders' : '/customer/login';
 
     return (
         <>
-            <header className="relative z-40 border-b border-border/70 bg-background/90 backdrop-blur-xl lg:sticky lg:top-0">
+            <div>
+                <div className="bg-[#17191f] text-white">
+                    <div className="mx-auto flex h-10 max-w-7xl items-center justify-between px-4 text-xs sm:px-6 lg:px-8">
+                        <div className="flex items-center gap-2 text-white/75">
+                            <MapPin
+                                className="size-3.5 shrink-0"
+                                aria-hidden="true"
+                            />
+                            <span>Deliver to</span>
+                            <span className="font-semibold text-white">
+                                Dhaka, Bangladesh
+                            </span>
+                        </div>
+                        <span className="font-medium lg:hidden">বাংলা / EN</span>
+                        <nav
+                            aria-label="Marketplace links"
+                            className="hidden items-center gap-5 lg:flex"
+                        >
+                            <Link
+                                href="/seller/onboarding"
+                                className="text-white/75 transition hover:text-white"
+                            >
+                                Sell on Sheradam.shop
+                            </Link>
+                            <Link
+                                href={ordersUrl}
+                                className="text-white/75 transition hover:text-white"
+                            >
+                                Track order
+                            </Link>
+                            <Link
+                                href="/faq"
+                                className="text-white/75 transition hover:text-white"
+                            >
+                                Help center
+                            </Link>
+                        </nav>
+                        <div className="hidden items-center gap-5 lg:flex">
+                            <Link
+                                href={ordersUrl}
+                                className="inline-flex items-center gap-1.5 text-white/75 transition hover:text-white"
+                            >
+                                <Bell className="size-3.5" aria-hidden="true" />
+                                Notifications
+                            </Link>
+                            <span className="text-white/75">বাংলা / EN</span>
+                            <span className="font-medium">
+                                {currency} {currencySymbol}
+                            </span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <header className="sticky top-0 z-40 border-b border-border/70 bg-background">
                 <div className="mx-auto flex h-[4.5rem] max-w-7xl items-center gap-3 px-4 sm:px-6 lg:gap-4 lg:px-8">
+                    <Brand />
+                    <DesktopNavigation categories={categories} />
+                    <SearchForm
+                        search={search}
+                        onSearchChange={setSearch}
+                        placeholder="Search products"
+                        className="ml-auto hidden h-10 max-w-64 min-w-40 flex-1 items-center gap-2 rounded-full border border-border bg-muted/50 px-3 lg:ml-0 lg:flex"
+                    />
+
+                    <div className="ml-auto flex shrink-0 items-center gap-1 lg:ml-0">
+                        <ThemeToggle className="lg:hidden" />
+                        {customer && (
+                            <Link
+                                href="/customer/account/orders"
+                                aria-label="My orders"
+                                title="My orders"
+                                className="grid size-10 place-items-center rounded-full transition hover:bg-muted lg:hidden"
+                            >
+                                <PackageCheck
+                                    className="size-[18px]"
+                                    aria-hidden="true"
+                                />
+                            </Link>
+                        )}
+                        <WishlistLink
+                            customer={customer}
+                            count={props.storefront.favoritesCount}
+                        />
+                        <CartDrawer initialCart={props.storefront.cart} />
+                        <Link
+                            href={
+                                customer
+                                    ? '/customer/account/profile'
+                                    : '/customer/login'
+                            }
+                            aria-label={customer ? 'My account' : 'Sign in'}
+                            title={customer ? 'My account' : 'Sign in'}
+                            className="grid size-10 place-items-center rounded-full transition hover:bg-muted lg:hidden"
+                        >
+                            <UserRound
+                                className="size-[18px]"
+                                aria-hidden="true"
+                            />
+                        </Link>
+                        <div className="hidden items-center gap-1 lg:flex">
+                            <ThemeToggle />
+                            <CustomerActions customer={customer} />
+                        </div>
+                    </div>
+                </div>
+
+                <div className="mx-auto flex max-w-7xl items-center gap-2 px-4 pb-3 sm:px-6 lg:hidden lg:px-8">
                     <Sheet open={mobileOpen} onOpenChange={setMobileOpen}>
                         <SheetTrigger asChild>
                             <button
                                 type="button"
                                 aria-label="Browse categories"
-                                className="grid size-10 shrink-0 place-items-center rounded-full border border-border lg:hidden"
+                                className="grid size-10 shrink-0 place-items-center rounded-full border border-border"
                             >
                                 <Menu className="size-4" aria-hidden="true" />
                             </button>
@@ -663,43 +785,12 @@ export default function Navbar() {
                             />
                         </SheetContent>
                     </Sheet>
-
                     <SearchForm
                         search={search}
                         onSearchChange={setSearch}
                         placeholder="Search products"
-                        className="flex h-10 min-w-0 flex-1 items-center gap-2 rounded-full border border-border bg-muted/50 px-3 lg:hidden"
+                        className="flex h-10 min-w-0 flex-1 items-center gap-2 rounded-full border border-border bg-muted/50 px-3"
                     />
-                    <Link
-                        href="/faq"
-                        aria-label="Help and FAQ"
-                        title="Help & FAQ"
-                        className="grid size-10 shrink-0 place-items-center rounded-full transition hover:bg-muted lg:hidden"
-                    >
-                        <CircleHelp
-                            className="size-[18px]"
-                            aria-hidden="true"
-                        />
-                    </Link>
-                    {/* <Brand className="hidden lg:flex" /> */}
-                    <Brand className="hidden lg:flex" />
-                    <DesktopNavigation categories={categories} />
-                    <SearchForm
-                        search={search}
-                        onSearchChange={setSearch}
-                        placeholder="Search products"
-                        className="ml-auto hidden h-10 max-w-64 min-w-40 flex-1 items-center gap-2 rounded-full border border-border bg-muted/50 px-3 lg:ml-0 lg:flex"
-                    />
-
-                    <div className="ml-auto hidden shrink-0 items-center gap-1 lg:ml-0 lg:flex">
-                        <ThemeToggle />
-                        <WishlistLink
-                            customer={customer}
-                            count={props.storefront.favoritesCount}
-                        />
-                        <CartDrawer initialCart={props.storefront.cart} />
-                        <CustomerActions customer={customer} />
-                    </div>
                 </div>
             </header>
             <MobileBottomNavigation
